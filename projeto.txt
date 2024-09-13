@@ -1,0 +1,20 @@
+plataforma-estudos-online/
+│
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── app.js
+│   ├── package.json
+│   └── config/
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   ├── package.json
+│   └── index.js
+│
+├── database/
+│   └── migrations/
+│
+└── README.md
