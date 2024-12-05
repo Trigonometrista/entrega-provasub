@@ -1,8 +1,7 @@
 // app.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');  // Importar CORS
-
+const cors = require('cors');
 const app = express();
 
 // Habilitar CORS para todas as rotas
@@ -17,6 +16,9 @@ require('./config/database')();
 // Rotas
 const userRoutes = require('./routes/user');
 app.use('/api/users', userRoutes);
+
+const courseRoutes = require('./routes/course');
+app.use('/api/courses', courseRoutes);
 
 // Iniciar o servidor
 app.listen(5000, () => {

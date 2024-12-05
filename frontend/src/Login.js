@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+const Login = () => {
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
-  const [showLoginLink, setShowLoginLink] = useState(false);
+  const [success, setSuccess] = useState(false); 
+  const navigate = useNavigate();
 
-  const { name, email, password } = formData;
+  const { email, password } = formData;
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,7 +18,7 @@ const Register = () => {
     setMessage('');
 
     try {
-      const res = await fetch('http://localhost:5000/api/users/register', {
+      const res = await fetch('http://localhost:5000/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -25,33 +26,24 @@ const Register = () => {
 
       const data = await res.json();
 
-      if (res.status === 201) {
-        setMessage('Cadastro realizado com sucesso!');
-        setShowLoginLink(true);
+      if (res.status === 200) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        setMessage('Login realizado com sucesso!');
+        setSuccess(true);
+        setTimeout(() => navigate('/profile'), 2000); 
       } else {
-        setMessage(data.message || 'Erro ao realizar cadastro');
+        setMessage(data.message || 'Erro ao realizar login');
       }
     } catch (err) {
-      setMessage('Erro ao conectar ao servidor.');
+      setMessage('Erro ao conectar ao servidor. Tente novamente mais tarde.');
     }
   };
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Cadastro de Usuário</h2>
+      <h2 style={styles.title}>Login</h2>
       <form onSubmit={onSubmit} style={styles.form}>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Nome</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={onChange}
-            required
-            style={styles.input}
-            placeholder="Digite seu nome"
-          />
-        </div>
         <div style={styles.formGroup}>
           <label style={styles.label}>Email</label>
           <input
@@ -77,17 +69,11 @@ const Register = () => {
           />
         </div>
         <button type="submit" style={styles.button}>
-          Cadastrar
+          Entrar
         </button>
       </form>
-      {message && <p style={styles.message}>{message}</p>}
-      {showLoginLink && (
-        <p>
-          <Link to="/login" style={styles.link}>
-            Clique aqui para ir à página de login
-          </Link>
-        </p>
-      )}
+      {message && <p style={message.includes('sucesso') ? styles.successMessage : styles.errorMessage}>{message}</p>}
+      {success && <p style={styles.infoMessage}>Você será redirecionado para a área de usuário logado</p>}
     </div>
   );
 };
@@ -139,15 +125,22 @@ const styles = {
     cursor: 'pointer',
     marginTop: '10px',
   },
-  message: {
+  successMessage: {
     marginTop: '10px',
     color: 'green',
     textAlign: 'center',
   },
-  link: {
-    color: '#007bff',
-    textDecoration: 'none',
+  errorMessage: {
+    marginTop: '10px',
+    color: 'red',
+    textAlign: 'center',
+  },
+  infoMessage: {
+    marginTop: '5px',
+    color: '#555',
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
 };
 
-export default Register;
+export default Login;

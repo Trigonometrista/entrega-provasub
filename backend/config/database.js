@@ -14,7 +14,7 @@ async function connectDB() {
     console.log('Conexão ao banco de dados foi bem-sucedida');
 
     // Sincroniza os modelos com o banco de dados (force: false evita recriar as tabelas)
-    await sequelize.sync({ force: false }); // Agora force: false para não recriar as tabelas
+    await sequelize.sync({ force: false }); 
     console.log('Sincronização com o banco de dados concluída (force: false)');
     
   } catch (error) {

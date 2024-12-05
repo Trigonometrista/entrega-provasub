@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import BackButton from './components/BackButton'; 
 
-const Register = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+const RegisterCourse = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    teacher: '',
+    lessons: '',
+    content: '',
+  });
   const [message, setMessage] = useState('');
-  const [showLoginLink, setShowLoginLink] = useState(false);
 
-  const { name, email, password } = formData;
+  const { name, teacher, lessons, content } = formData;
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,7 +21,7 @@ const Register = () => {
     setMessage('');
 
     try {
-      const res = await fetch('http://localhost:5000/api/users/register', {
+      const res = await fetch('http://localhost:5000/api/courses/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -26,10 +30,10 @@ const Register = () => {
       const data = await res.json();
 
       if (res.status === 201) {
-        setMessage('Cadastro realizado com sucesso!');
-        setShowLoginLink(true);
+        setMessage('Curso cadastrado com sucesso!');
+        setFormData({ name: '', teacher: '', lessons: '', content: '' });
       } else {
-        setMessage(data.message || 'Erro ao realizar cadastro');
+        setMessage(data.message || 'Erro ao cadastrar curso');
       }
     } catch (err) {
       setMessage('Erro ao conectar ao servidor.');
@@ -38,10 +42,10 @@ const Register = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Cadastro de Usuário</h2>
+      <h2 style={styles.title}>Cadastrar Novo Curso</h2>
       <form onSubmit={onSubmit} style={styles.form}>
         <div style={styles.formGroup}>
-          <label style={styles.label}>Nome</label>
+          <label style={styles.label}>Nome do Curso</label>
           <input
             type="text"
             name="name"
@@ -49,53 +53,55 @@ const Register = () => {
             onChange={onChange}
             required
             style={styles.input}
-            placeholder="Digite seu nome"
+            placeholder="Digite o nome do curso"
           />
         </div>
         <div style={styles.formGroup}>
-          <label style={styles.label}>Email</label>
+          <label style={styles.label}>Nome do Professor</label>
           <input
-            type="email"
-            name="email"
-            value={email}
+            type="text"
+            name="teacher"
+            value={teacher}
             onChange={onChange}
             required
             style={styles.input}
-            placeholder="Digite seu email"
+            placeholder="Digite o nome do professor"
           />
         </div>
         <div style={styles.formGroup}>
-          <label style={styles.label}>Senha</label>
+          <label style={styles.label}>Quantidade de Aulas</label>
           <input
-            type="password"
-            name="password"
-            value={password}
+            type="number"
+            name="lessons"
+            value={lessons}
             onChange={onChange}
             required
             style={styles.input}
-            placeholder="Digite sua senha"
+            placeholder="Digite o número de aulas"
           />
         </div>
-        <button type="submit" style={styles.button}>
-          Cadastrar
-        </button>
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Conteúdo do Curso</label>
+          <textarea
+            name="content"
+            value={content}
+            onChange={onChange}
+            required
+            style={styles.textarea}
+            placeholder="Digite o conteúdo do curso"
+          />
+        </div>
+        <button type="submit" style={styles.button}>Cadastrar Curso</button>
       </form>
       {message && <p style={styles.message}>{message}</p>}
-      {showLoginLink && (
-        <p>
-          <Link to="/login" style={styles.link}>
-            Clique aqui para ir à página de login
-          </Link>
-        </p>
-      )}
+      <BackButton /> {/* Voltar a pagina inicial*/}
     </div>
   );
 };
 
-// Estilos Inline
 const styles = {
   container: {
-    maxWidth: '400px',
+    maxWidth: '500px',
     margin: '50px auto',
     padding: '20px',
     border: '1px solid #ccc',
@@ -117,7 +123,6 @@ const styles = {
     marginBottom: '15px',
   },
   label: {
-    display: 'block',
     marginBottom: '5px',
     fontWeight: 'bold',
     color: '#555',
@@ -127,7 +132,13 @@ const styles = {
     fontSize: '16px',
     border: '1px solid #ccc',
     borderRadius: '5px',
-    width: '100%',
+  },
+  textarea: {
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    height: '100px',
   },
   button: {
     padding: '10px',
@@ -137,17 +148,12 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    marginTop: '10px',
   },
   message: {
     marginTop: '10px',
-    color: 'green',
     textAlign: 'center',
-  },
-  link: {
-    color: '#007bff',
-    textDecoration: 'none',
+    color: 'green',
   },
 };
 
-export default Register;
+export default RegisterCourse;
