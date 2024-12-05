@@ -2,19 +2,39 @@ plataforma-estudos-online/
 │
 ├── backend/
 │   ├── controllers/
+│   │   ├── userController.js
 │   ├── models/
+│   │   ├── User.js
+│   │   └── Course.js
 │   ├── routes/
+│   │   ├── user.js
+│   │   └── course.js
 │   ├── app.js
 │   ├── package.json
 │   └── config/
+│       └── database.js
 │
 ├── frontend/
 │   ├── public/
+│   │   ├── index.html
+│   │   └── favicon.ico
 │   ├── src/
-│   ├── package.json
-│   └── index.js
+│   │   ├── components/
+│   │   │   ├── BackButton.js
+│   │   ├── Login.js
+│   │   ├── Register.js
+│   │   ├── Profile.js
+│   │   ├── RegisterCourse.js
+│   │   ├── CourseList.js
+│   │   ├── CourseDetails.js
+│   │   ├── App.js
+│   │   ├── index.css
+│   │   ├── index.js
+│   │   └── package.json
 │
 ├── database/
 │   └── migrations/
+│       ├── create_users_table.sql
+│       └── create_courses_table.sql
 │
 └── README.md
